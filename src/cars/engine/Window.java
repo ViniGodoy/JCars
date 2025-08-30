@@ -65,13 +65,12 @@ public class Window extends JFrame {
                 var strategy = getBufferStrategy();
                 while (true) {
                     double actual = System.currentTimeMillis();
-                    double time = (actual - prev) / 1000.0;
-
                     var g2d = (Graphics2D) strategy.getDrawGraphics();
-                    draw(g2d);
-                    g2d.dispose();
 
-                    update(time);
+                    draw(g2d);
+                    update((actual - prev) / 1000.0);
+
+                    g2d.dispose();
                     Thread.sleep(1);
                     prev = actual;
                     strategy.show();
@@ -85,11 +84,8 @@ public class Window extends JFrame {
         gameLoop.start();
     }
 
-    private void update(double time) {
-        for (var car : cars) {
-            var world = new World(time, car, cars, mousePos, clickPos);
-            car.update(world);
-        }
+    public void update(final double time) {
+        cars.forEach(car -> car.update(new World(time, car, cars, mousePos, clickPos)));
     }
 
     public void draw(Graphics2D g2d) {
