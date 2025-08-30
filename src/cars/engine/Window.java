@@ -10,8 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
-public class Window extends JFrame {
-    private static final Window instance = new Window();
+public class Window extends JFrame implements Runnable {
     private final List<Car> cars;
     private Vector2 clickPos = null;
     private Vector2 mousePos = null;
@@ -48,40 +47,39 @@ public class Window extends JFrame {
         this.cars = new Setup().createCars();
     }
 
-    public static Window getInstance() {
-        return instance;
-    }
-
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> Window.getInstance().setVisible(true));
+        EventQueue.invokeLater(() -> new Window().setVisible(true));
     }
 
     private void start() {
         createBufferStrategy(3);
-        var gameLoop = new Thread(() -> {
-            double prev = System.currentTimeMillis() - 1;
-            try {
-                System.out.println("Starting loop");
-                var strategy = getBufferStrategy();
-                while (true) {
-                    double actual = System.currentTimeMillis();
-                    var g2d = (Graphics2D) strategy.getDrawGraphics();
-
-                    draw(g2d);
-                    update((actual - prev) / 1000.0);
-
-                    g2d.dispose();
-                    Thread.sleep(1);
-                    prev = actual;
-                    strategy.show();
-                }
-            } catch (InterruptedException e) {
-                System.err.println("Interrupted");
-            }
-            System.exit(0);
-        }, "game-loop");
+        final var gameLoop = new Thread(this, "game-loop");
         gameLoop.setDaemon(true);
         gameLoop.start();
+    }
+
+    @Override
+    public void run() {
+        double prev = System.currentTimeMillis() - 1;
+        try {
+            System.out.println("Starting loop");
+            var strategy = getBufferStrategy();
+            while (true) {
+                final double actual = System.currentTimeMillis();
+                final var g2d = (Graphics2D) strategy.getDrawGraphics();
+
+                draw(g2d);
+                update((actual - prev) / 1000.0);
+
+                g2d.dispose();
+                Thread.sleep(1);
+                prev = actual;
+                strategy.show();
+            }
+        } catch (InterruptedException e) {
+            System.err.println("Interrupted");
+        }
+        System.exit(0);
     }
 
     public void update(final double time) {
