@@ -12,9 +12,9 @@ import static java.lang.Math.*;
 public class StudentCar extends Car {
     public StudentCar() {
         super(
-            Color.BLUE,                 //Cor
-            new Vector2(0, 0),     //Posição inicial
-            toRadians(0)                //Angulo inicial
+            Color.BLUE, //Cor
+            new Vector2(0, 0), //Posição inicial
+            toRadians(0) //Angulo inicial
         );
     }
 
