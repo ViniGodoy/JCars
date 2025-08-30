@@ -1,4 +1,5 @@
 package cars.engine;
+
 import java.util.Objects;
 
 /**
@@ -34,7 +35,26 @@ public final class Vector2 implements Cloneable {
     }
 
     /**
+     * Calls the constructor.
+     *
+     * @see Vector2
+     */
+    public static Vector2 vec2() {
+        return new Vector2();
+    }
+
+    /**
+     * Calls the constructor.
+     *
+     * @see Vector2
+     */
+    public static Vector2 vec2(double x, double y) {
+        return new Vector2(x, y);
+    }
+
+    /**
      * Creates a unitary vector based in the given angle
+     *
      * @return The vector
      * @see Vector2#byAngleSize(double, double)
      */
@@ -44,6 +64,7 @@ public final class Vector2 implements Cloneable {
 
     /**
      * Creates a vector based in the given size and angle
+     *
      * @return The vector
      */
     public static Vector2 byAngleSize(double angle, double size) {
@@ -153,12 +174,49 @@ public final class Vector2 implements Cloneable {
 
     /**
      * Returns a rotated copy of the given vector.
-     * @param vector The vector to rotate
+     *
+     * @param vector  The vector to rotate
      * @param radians Angle to rate
      * @return The rotated vector
      */
     public static Vector2 rotate(Vector2 vector, double radians) {
         return vector.clone().rotate(radians);
+    }
+
+    /**
+     * @return The distance between the two vectors
+     */
+    public static double distanceSqr(Vector2 v1, Vector2 v2) {
+        return subtract(v1, v2).sizeSqr();
+    }
+
+    public static double distance(Vector2 v1, Vector2 v2) {
+        return subtract(v1, v2).size();
+    }
+
+    /**
+     * Truncates the vector to the given size.
+     *
+     * @param vector Vector to be truncated
+     * @param size   The maximum vector size
+     * @return The truncated vector
+     */
+    public static Vector2 truncate(Vector2 vector, double size) {
+        if (vector.sizeSqr() <= size * size) {
+            return vector.clone();
+        }
+        return normalize(vector).multiply(size);
+    }
+
+    /**
+     * Reflects the vector over the normal
+     *
+     * @param ray    ray vector
+     * @param normal normal
+     * @return The reflected vector
+     */
+    public static Vector2 reflex(Vector2 ray, Vector2 normal) {
+        return subtract(ray, normal.multiply(2 * ray.dot(normal)));
     }
 
     /**
@@ -277,6 +335,7 @@ public final class Vector2 implements Cloneable {
 
     /**
      * Rotate the vector
+     *
      * @param radians Angle to rotate
      * @return This vector, rotated
      */
@@ -328,45 +387,15 @@ public final class Vector2 implements Cloneable {
 
     @Override
     public Vector2 clone() {
-        return new Vector2(x, y);
+        try {
+            return (Vector2) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Vector2(this.x, this.y);
+        }
     }
 
     @Override
     public String toString() {
         return String.format("v(%.2f, %.2f)", x, y);
-    }
-
-    /**
-     * @return The distance between the two vectors
-     */
-    public static double distanceSqr(Vector2 v1, Vector2 v2) {
-        return subtract(v1, v2).sizeSqr();
-    }
-
-    public static double distance(Vector2 v1, Vector2 v2) {
-        return subtract(v1, v2).size();
-    }
-
-    /**
-     * Truncates the vector to the given size.
-     * @param vector Vector to be truncated
-     * @param size The maximum vector size
-     * @return The truncated vector
-     */
-    public static Vector2 truncate(Vector2 vector, double size) {
-        if (vector.sizeSqr() <= size * size) {
-            return vector.clone();
-        }
-        return normalize(vector).multiply(size);
-    }
-
-    /**
-     * Reflects the vector over the normal
-     * @param ray ray vector
-     * @param normal normal
-     * @return The reflected vector
-     */
-    public static Vector2 reflex(Vector2 ray, Vector2 normal) {
-        return subtract(ray, normal.multiply(2 * ray.dot(normal)));
     }
 }

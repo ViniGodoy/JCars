@@ -8,18 +8,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Window extends JFrame {
-    private List<Car> cars = new ArrayList<>();
+    private static final Window instance = new Window();
+    private final List<Car> cars;
     private Vector2 clickPos = null;
     private Vector2 mousePos = null;
-    private static final Window instance = new Window();
-
-    public static final Window getInstance() {
-        return instance;
-    }
 
     private Window() {
         super("Steering behaviors");
@@ -51,6 +46,14 @@ public class Window extends JFrame {
             }
         });
         this.cars = new Setup().createCars();
+    }
+
+    public static Window getInstance() {
+        return instance;
+    }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> Window.getInstance().setVisible(true));
     }
 
     private void start() {
@@ -90,20 +93,21 @@ public class Window extends JFrame {
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.setBackground(Color.WHITE);
-        g2d.clearRect(0, 0, 1024, 768);
-        g2d.translate(1024 / 2.0, 768 / 2.0);
-        if (clickPos != null) {
-            g2d.setColor(Color.RED);
-            g2d.fillOval((int) clickPos.x-5, (int) clickPos.y-5, 10, 10);
-        }
-        for (var car : cars) {
-            car.draw(g2d);
-        }
-        g2d.dispose();
-    }
+        // Setup for quality
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> Window.getInstance().setVisible(true));
+        g2d.setBackground(new Color(220, 220, 220));
+        g2d.clearRect(0, 0, getWidth(), getHeight());
+        g2d.translate(getWidth() / 2.0, getHeight() / 2.0);
+        if (clickPos != null) {
+            g2d.setColor(Color.GRAY);
+            g2d.fillOval((int) clickPos.x - 4, (int) clickPos.y - 4, 8, 8);
+        }
+        cars.forEach(car -> car.draw(g2d));
+        g2d.dispose();
     }
 }

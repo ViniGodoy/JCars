@@ -1,16 +1,16 @@
 package cars.engine;
 
-import static cars.engine.Vector2.*;
 import java.awt.*;
+
+import static cars.engine.Vector2.*;
 
 public abstract class Car implements Cloneable {
     private final Color color;
-    private Vector2 position;
-    private Vector2 velocity;
-
     private final double mass;
     private final double maxForce;
     private final double maxSpeed;
+    private Vector2 position;
+    private Vector2 velocity;
 
     public Car(Color color, Vector2 position, double orientation, double mass, double maxForce, double maxSpeed) {
         this.color = color;
@@ -38,8 +38,7 @@ public abstract class Car implements Cloneable {
     }
 
     public Vector2 getDirection() {
-        return velocity.isZero() ?
-            Vector2.byAngle(0) : Vector2.normalize(velocity);
+        return velocity.isZero() ? byAngle(0) : normalize(velocity);
     }
 
     public abstract Vector2 calculateSteering(World world);
@@ -54,22 +53,22 @@ public abstract class Car implements Cloneable {
         //Circula pela tela
         final var w = 1024.0 / 2.0;
         final var h = 768.0 / 2.0f;
-        if (position.x < -(w+20)) position.x = w;
-        if (position.x > w+20) position.x = -w;
-        if (position.y < -(h+20)) position.y = h;
-        if (position.y > h+20) position. y = -h;
+        if (position.x < -(w + 20)) position.x = w;
+        if (position.x > w + 20) position.x = -w;
+        if (position.y < -(h + 20)) position.y = h;
+        if (position.y > h + 20) position.y = -h;
     }
 
     void draw(Graphics2D canvas) {
         final var g2d = (Graphics2D) canvas.create();
-            g2d.translate(position.x, position.y);
-            g2d.rotate(velocity.getAngle());
+        g2d.translate(position.x, position.y);
+        g2d.rotate(velocity.getAngle());
 
-            g2d.setColor(this.color);
-            g2d.fillRect(-20, -10, 40, 20);
-            g2d.setColor(Color.YELLOW);
-            g2d.fillRect(16, -7, 2, 4);
-            g2d.fillRect(16,  3, 2, 4);
+        g2d.setColor(this.color);
+        g2d.fillRect(-20, -10, 40, 20);
+        g2d.setColor(Color.YELLOW);
+        g2d.fillRect(16, -7, 2, 4);
+        g2d.fillRect(16, 3, 2, 4);
         g2d.dispose();
     }
 
