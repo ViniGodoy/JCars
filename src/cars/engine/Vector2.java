@@ -220,6 +220,16 @@ public final class Vector2 implements Cloneable {
     }
 
     /**
+     * Returns a resized copy of v.
+     * @param v The vector to resize.
+     * @param newSize The new size
+     * @return The resized copy of v.
+     */
+    public static Vector2 resize(Vector2 v, float newSize) {
+        return v.clone().resize(newSize);
+    }
+
+    /**
      * Changes all vector components
      *
      * @param x New x value
@@ -244,6 +254,15 @@ public final class Vector2 implements Cloneable {
      */
     public double size() {
         return Math.sqrt(sizeSqr());
+    }
+
+    /**
+     * Changes this Vector2 size. Equivalent to v.normalize().multiply(size)
+     * @param newSize The new size.
+     * @return The resized vector.
+     */
+    public Vector2 resize(double newSize) {
+        return this.normalize().multiply(newSize);
     }
 
     /**
