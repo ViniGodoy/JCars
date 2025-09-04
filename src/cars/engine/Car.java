@@ -29,24 +29,23 @@ public abstract class Car implements Cloneable {
         this(color, position, orientation, 1, 350, 500);
     }
 
-    public Vector2 getPosition() {
-        return position.clone();
-    }
-
-    public Vector2 getVelocity() {
-        return velocity.clone();
-    }
-
-    public Vector2 getDirection() {
-        return velocity.isZero() ? byAngle(0) : normalize(velocity);
-    }
+    public Vector2 getPosition() { return position.clone(); }
+    public Vector2 getVelocity() { return velocity.clone(); }
+    public Vector2 getDirection() { return velocity.isZero() ? byAngle(0) : normalize(velocity); }
+    public double getMass() { return mass; }
+    public double getMaxForce() { return maxForce; }
+    public double getMaxSpeed() { return maxSpeed; }
 
     public abstract Vector2 calculateSteering(World world);
 
     void update(World world) {
         //Super simplified pysics model from Reynolds modified to take the velocity into account
-        final var steeringForce = truncate(calculateSteering(world), maxForce).multiply(world.getSecs());
-        final var acceleration = divide(steeringForce, mass);
+        final var steeringForce = calculateSteering(world);
+        if (steeringForce == null) {
+            return;
+        }
+        final var impulse = truncate(calculateSteering(world), maxForce).multiply(world.getSecs());
+        final var acceleration = divide(impulse, mass);
         velocity = truncate(add(velocity, acceleration), maxSpeed);
         position = multiply(velocity, world.getSecs()).add(position);
 
