@@ -7,20 +7,32 @@ import static cars.engine.Vector2.distance;
 public final class World {
     private final Car current;
     private final List<Car> cars;
-    private final Vector2 mousePos;
-    private final Vector2 clickPos;
+    private final Vector2 mousePos;   // absolute scene coords; may be null
+    private final Vector2 clickPos;   // center-relative coords; may be null
     private final double secs;
 
-    public World(double secs, Car current, List<Car> cars, Vector2 mousePos, Vector2 clickPos) {
+    // NEW: dynamic canvas dimensions
+    private final double width;
+    private final double height;
+
+    public World(double secs,
+                 Car current,
+                 List<Car> cars,
+                 Vector2 mousePos,
+                 Vector2 clickPos,
+                 double width,
+                 double height) {
         this.current = current;
         this.cars = cars;
         this.mousePos = mousePos;
         this.clickPos = clickPos;
         this.secs = secs;
+        this.width = width;
+        this.height = height;
     }
 
     public Vector2 getMousePos() {
-        return mousePos.clone();
+        return mousePos == null ? null : mousePos.clone();
     }
 
     public Vector2 getClickPos() {
@@ -41,4 +53,7 @@ public final class World {
     public double getSecs() {
         return secs;
     }
+
+    public double getWidth() { return width; }
+    public double getHeight() { return height; }
 }
