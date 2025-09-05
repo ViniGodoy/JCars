@@ -1,6 +1,11 @@
 package cars.engine;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
+
+import static java.lang.Double.isInfinite;
+import static java.lang.Double.isNaN;
 
 /**
  * Represents a vector in 2D coordinate space.
@@ -239,6 +244,18 @@ public final class Vector2 implements Cloneable {
         return v == null || v.isZero();
     }
 
+    private static long q8(double v) {
+        // If you expect only finite values, you can drop this branch.
+        if (isInfinite(v)) {
+            if (isNaN(v)) return 0L;
+            if (v > 0) return Long.MAX_VALUE;
+            return Long.MIN_VALUE;
+        }
+        final var scale = 8;
+        final var bd = BigDecimal.valueOf(v).setScale(scale, RoundingMode.HALF_UP);
+        return bd.movePointRight(scale).longValueExact();
+    }
+
     /**
      * Changes all vector components
      *
@@ -403,16 +420,16 @@ public final class Vector2 implements Cloneable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != getClass()) return false;
-        final var other = (Vector2) obj;
-        return x == other.x && y == other.y;
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other.getClass() != Vector2.class) return false;
+        Vector2 v = (Vector2) other;
+        return q8(x) == q8(v.x) && q8(y) == q8(v.y);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return Objects.hash(q8(x), q8(y));
     }
 
     @Override
