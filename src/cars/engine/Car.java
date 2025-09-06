@@ -194,4 +194,8 @@ public abstract class Car implements Cloneable {
             return null;
         }
     }
+
+    public static double distance(Car car1, Car car2) {
+        return Vector2.distance(car1.position, car2.position);
+    }
 }

@@ -2,7 +2,7 @@ package cars.engine;
 
 import java.util.List;
 
-import static cars.engine.Vector2.distance;
+import static cars.engine.Car.distance;
 
 public final class World {
     private final Car current;
@@ -40,13 +40,15 @@ public final class World {
     }
 
     public List<Car> getNeighbors() {
-        return this.getNeighbors(Integer.MAX_VALUE);
+        return this.cars.stream()
+            .filter(c -> c != current)
+            .toList();
     }
 
     public List<Car> getNeighbors(int radius) {
         return this.cars.stream()
             .filter(c -> c != current)
-            .filter(c -> distance(current.getPosition(), c.getPosition()) <= radius)
+            .filter(c -> distance(current, c) <= radius)
             .toList();
     }
 
