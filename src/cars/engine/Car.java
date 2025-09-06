@@ -58,9 +58,8 @@ public abstract class Car implements Cloneable {
         velocity = truncate(add(velocity, acceleration), maxSpeed);
         position = add(position, multiply(velocity, world.getSecs()));
 
-        // Wrap (use your World if it carries size; otherwise keep your constants)
-        final var w = 1024.0 / 2.0;
-        final var h = 768.0 / 2.0;
+        final var w = world.getWidth() / 2.0;
+        final var h = world.getHeight() / 2.0;
         if (position.x < -(w + 20)) position.x =  w;
         if (position.x >  (w + 20)) position.x = -w;
         if (position.y < -(h + 20)) position.y =  h;
@@ -70,7 +69,7 @@ public abstract class Car implements Cloneable {
     // -----------------------------------------------------
     // Drawing (Java2D)
     // -----------------------------------------------------
-    void draw(Graphics2D g) {
+    void draw(Graphics2D g, boolean debug) {
         // Car in its local (heading) frame
         final var g2 = (Graphics2D) g.create();
         g2.translate(position.x, position.y);
@@ -82,7 +81,9 @@ public abstract class Car implements Cloneable {
         g2.dispose();
 
         // Debug vectors in WORLD space (no rotation)
-        drawDebugArrows(g);
+        if (debug) {
+            drawDebugArrows(g);
+        }
     }
 
     // ----- F1 car, authored at 80px, drawn with 50% scale above -----

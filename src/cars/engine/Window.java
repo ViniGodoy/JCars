@@ -4,26 +4,23 @@ import cars.student.Setup;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.List;
 
 public class Window extends JFrame implements Runnable {
     private final List<Car> cars;
     private Vector2 clickPos = null;
     private Vector2 mousePos = null;
+    private boolean debugMode = true;
 
     private Window() {
         super("Steering behaviors");
         setSize(1024, 768);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setIgnoreRepaint(true);
         setResizable(true);
-
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -52,6 +49,15 @@ public class Window extends JFrame implements Runnable {
             }
         });
 
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if ("D".equalsIgnoreCase("" + e.getKeyChar())) {
+                    debugMode = !debugMode;
+                }
+            }
+        });
+        requestFocus();
         this.cars = new Setup().createCars();
     }
 
@@ -91,11 +97,14 @@ public class Window extends JFrame implements Runnable {
         System.exit(0);
     }
 
-    private void update(final double dt) {
-        final var w = getWidth();
-        final var h = getHeight();
-        cars.forEach(car ->
-            car.update(new World(dt, car, cars, mousePos, clickPos, w, h))
+    private void update(final double secs) {
+        cars.forEach(car -> car.update(
+            new World(
+                    secs, car, cars,
+                    mousePos, clickPos,
+                    getWidth(), getHeight()
+                )
+            )
         );
     }
 
@@ -121,6 +130,13 @@ public class Window extends JFrame implements Runnable {
         }
 
         // Draw cars
-        cars.forEach(car -> car.draw(g2d));
+        cars.forEach(car -> car.draw(g2d, debugMode));
+
+        g2d.setFont(new Font("Arial", Font.PLAIN, 10));
+        g2d.setColor(Color.DARK_GRAY);
+        g2d.drawString(
+            "Press D to turn debug arrows %s".formatted(debugMode ? "off" : "on"),
+            20.0f - getWidth() / 2.0f, getHeight() / 2.0f - 20.0f
+        );
     }
 }
