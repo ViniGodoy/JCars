@@ -12,8 +12,8 @@ import java.util.List;
 
 public class Window extends JFrame implements Runnable {
     private final List<Car> cars;
-    private Vector2 clickPos = null;  // relative to center
-    private Vector2 mousePos = null;  // absolute window coords
+    private Vector2 clickPos = null;
+    private Vector2 mousePos = null;
 
     private Window() {
         super("Steering behaviors");
@@ -45,7 +45,10 @@ public class Window extends JFrame implements Runnable {
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                mousePos = new Vector2(e.getX(), e.getY());
+                mousePos = new Vector2(
+                    e.getX() - getWidth() / 2.0,
+                    e.getY() - getHeight() / 2.0
+                );
             }
         });
 
