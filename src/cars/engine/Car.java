@@ -36,6 +36,8 @@ public abstract class Car implements Cloneable {
     // ---- Accessors ----
     public Vector2 getPosition() { return position.clone(); }
     public Vector2 getVelocity() { return velocity.clone(); }
+    public double getSpeed() { return velocity.size(); }
+
     public Vector2 getDirection() { return velocity.isZero() ? byAngle(0) : normalize(velocity); }
     public double getMass() { return mass; }
     public double getMaxForce() { return maxForce; }
