@@ -11,7 +11,6 @@ public final class World {
     private final Vector2 clickPos;   // center-relative coords; may be null
     private final double secs;
 
-    // NEW: dynamic canvas dimensions
     private final double width;
     private final double height;
 

@@ -98,26 +98,30 @@ public final class Vector2 implements Cloneable {
     }
 
     /**
-     * Adds two vectors together.
+     * Adds vectors together.
      *
      * @param v1 The first vector
-     * @param v2 The second vector
+     * @param vs Other vectors to add.
      * @return The addition result.
      */
-    public static Vector2 add(Vector2 v1, Vector2 v2) {
-        return v1.clone().add(v2);
+    public static Vector2 add(Vector2 v1, Vector2 ... vs) {
+        var result = v1.clone();
+        for (var v : vs) result.add(v);
+        return result;
     }
 
     /**
-     * Subtracts two vectors together.
+     * Subtracts vectors.
      *
      * @param v1 The first vector
-     * @param v2 The second vector
+     * @param vs Other vectors to subtract
      * @return The subtraction result.
      * @see #subtract(Vector2)
      */
-    public static Vector2 subtract(Vector2 v1, Vector2 v2) {
-        return v1.clone().subtract(v2);
+    public static Vector2 subtract(Vector2 v1, Vector2 ... vs) {
+        var result = v1.clone();
+        for (var v : vs) result.subtract(v);
+        return result;
     }
 
     /**
@@ -305,8 +309,7 @@ public final class Vector2 implements Cloneable {
      * Adds another vector to this vector.
      *
      * @param other The vector to add.
-     * @return This vector after addition.
-     * @see Vector2#add(Vector2, Vector2)
+     * @return This vector after addition.*
      */
     public Vector2 add(Vector2 other) {
         x += other.x;
@@ -329,7 +332,6 @@ public final class Vector2 implements Cloneable {
      *
      * @param other The vector to subtract to.
      * @return This vector after subtraction.
-     * @see Vector2#subtract(Vector2, Vector2)
      */
     public Vector2 subtract(Vector2 other) {
         x -= other.x;
