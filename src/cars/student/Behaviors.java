@@ -2,7 +2,8 @@ package cars.student;
 
 import cars.engine.Car;
 import cars.engine.Vector2;
-import cars.engine.World;
+
+import java.util.random.RandomGenerator;
 
 import static cars.engine.Vector2.*;
 import static java.lang.Math.acos;
@@ -104,7 +105,7 @@ public class Behaviors {
      * @param evader Veículo fugitivo
      * @return A steering force do perseguidor.
      */
-    public Vector2 pursuit(Car pursuer, Car evader) {
+    public static Vector2 pursuit(Car pursuer, Car evader) {
         var toEvader = subtract(evader.getPosition(), pursuer.getPosition());
 
         // Se o fugitivo está diretamente a frente vindo em nossa direção
@@ -119,5 +120,81 @@ public class Behaviors {
         var lookAheadTime = toEvader.size() / (pursuer.getMaxSpeed() * evader.getSpeed());
         var futurePosition = add(evader.getPosition(), multiply(evader.getVelocity(), lookAheadTime));
         return seek(pursuer, futurePosition);
+    }
+
+    /**
+     * Direciona o carro para um alvo posicionado a em um círculo a sua frente.
+     * O alvo se mexe alguns graus sobre esse círculo para a esquerda ou direita a cada frame (jitter).
+     */
+    public static class Wander {
+        private static final RandomGenerator RND = RandomGenerator.getDefault();
+        private final Car car;
+        private final double distance;
+        private final double radius;
+        private final double jitter;
+        private double angle;
+
+        /**
+         * Calculates the wander steering force.
+         *
+         * @param car The car to wander
+         * @param distance Wander distance
+         * @param radius Wander radius
+         * @param jitter Maximum target angle jitter, in degrees
+         */
+        public Wander(Car car, double distance, double radius, double jitter) {
+            this.car = car;
+            this.distance = distance;
+            this.radius = Math.abs(radius);
+            this.jitter = Math.abs(jitter);
+            this.angle = RND.nextDouble(0, 2 * Math.PI);
+        }
+
+        /**
+         * Calculates the wander steering force, with a jitter of 15 degrees.
+         *
+         * @param car The car to wander
+         * @param distance Wander distance
+         * @param radius Wander radius
+         */
+        public Wander(Car car, double distance, double radius) {
+            this(car, distance, radius, 15);
+        }
+
+        /**
+         * Calculates the wander steering force, with a 90 pixel radius and a jitter of 15 degrees.
+         *
+         * @param car The car to wander
+         * @param distance Wander distance
+         */
+        public Wander(Car car, double distance) {
+            this(car, distance, 90);
+        }
+
+        /**
+         * Calculates the wander steering force, with a 120 pixel distance, 90 pixel radius and a jitter of 15 degrees.
+         *
+         * @param car The car to wander
+         */
+        public Wander(Car car) {
+            this(car, 120);
+        }
+
+        /**
+         * @return  the moving target. Randomly moves the target in every call.
+         */
+        public Vector2 target() {
+            angle += Math.toRadians(RND.nextDouble(-jitter, jitter));
+            return add(car.getPosition(), add(car.getDirection().multiply(distance), byAngleSize(angle, radius)));
+        }
+
+        /**
+         * @return The calculated force, which is basically a seek in the target direction.
+         * @see #target()
+         * @see Behaviors#seek(Car, Vector2)
+         */
+        public Vector2 force() {
+            return seek(car, target());
+        }
     }
 }
