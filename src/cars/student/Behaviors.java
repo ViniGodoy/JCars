@@ -67,12 +67,12 @@ public class Behaviors {
      */
     public static Vector2 arrive(Car car, Vector2 target, double deceleration, double stopDistance) {
         var toTarget = subtract(target, car.getPosition());
-        double dist = toTarget.size();
+        var dist = toTarget.size();
         if (dist < stopDistance) {
             return vec2();
         }
 
-        double speed = Math.min(dist / deceleration, car.getMaxSpeed());
+        var speed = Math.min(dist / deceleration, car.getMaxSpeed());
         var desiredVelocity = toTarget.multiply(speed / dist);
         return subtract(desiredVelocity, car.getVelocity());
     }
@@ -135,12 +135,13 @@ public class Behaviors {
         private double angle;
 
         /**
-         * Calculates the wander steering force.
-         *
-         * @param car The car to wander
-         * @param distance Wander distance
-         * @param radius Wander radius
-         * @param jitter Maximum target angle jitter, in degrees
+         * Direciona o carro para um alvo posicionado a em um círculo a sua frente.
+         * O alvo se mexe alguns graus sobre esse círculo para a esquerda ou direita a cada frame (jitter).
+
+         * @param car O carro que fará o wander
+         * @param distance Distancia que o círculo do alvo estará do carro
+         * @param radius Radio do círculo sobre o qual o alvo está
+         * @param jitter Angulo máximo que o alvo pode girar em qualquer sentido, em graus
          */
         public Wander(Car car, double distance, double radius, double jitter) {
             this.car = car;
@@ -151,45 +152,51 @@ public class Behaviors {
         }
 
         /**
-         * Calculates the wander steering force, with a jitter of 15 degrees.
-         *
-         * @param car The car to wander
-         * @param distance Wander distance
-         * @param radius Wander radius
+         * Direciona o carro para um alvo posicionado a em um círculo a sua frente.
+         * O alvo se mexe alguns graus sobre esse círculo para a esquerda ou direita a cada frame (jitter).
+         * Usa um jitter de 15 graus.
+         * @param car O carro que fará o wander
+         * @param distance Distancia que o círculo do alvo estará do carro
+         * @param radius Radio do círculo sobre o qual o alvo está
          */
         public Wander(Car car, double distance, double radius) {
             this(car, distance, radius, 15);
         }
 
         /**
-         * Calculates the wander steering force, with a 90 pixel radius and a jitter of 15 degrees.
-         *
-         * @param car The car to wander
-         * @param distance Wander distance
+         * Direciona o carro para um alvo posicionado a em um círculo a sua frente.
+         * O alvo se mexe alguns graus sobre esse círculo para a esquerda ou direita a cada frame (jitter).
+         * Usa um raio de 90 pixels e jitter de 15 graus.
+         * @param car O carro que fará o wander
+         * @param distance Distancia que o círculo do alvo estará do carro
          */
         public Wander(Car car, double distance) {
             this(car, distance, 90);
         }
 
         /**
-         * Calculates the wander steering force, with a 120 pixel distance, 90 pixel radius and a jitter of 15 degrees.
-         *
-         * @param car The car to wander
+         * Direciona o carro para um alvo posicionado a em um círculo a sua frente.
+         * O alvo se mexe alguns graus sobre esse círculo para a esquerda ou direita a cada frame (jitter).
+         * Usa um raio de 90 pixels e jitter de 15 graus.
+         * @param car O carro que fará o wander
          */
         public Wander(Car car) {
             this(car, 120);
         }
 
         /**
-         * @return  the moving target. Randomly moves the target in every call.
+         * @return A posição do alvo, após aplicada sua movimentação aleatória.
          */
         public Vector2 target() {
             angle += Math.toRadians(RND.nextDouble(-jitter, jitter));
-            return add(car.getPosition(), add(car.getDirection().multiply(distance), byAngleSize(angle, radius)));
+
+            var circleOffset = car.getDirection().multiply(distance);
+            var targetPosInCircle = byAngleSize(angle, radius);
+            return add(car.getPosition(), circleOffset, targetPosInCircle);
         }
 
         /**
-         * @return The calculated force, which is basically a seek in the target direction.
+         * @return A steering force calculada, isto é, um seek até a posição calculada do alvo.
          * @see #target()
          * @see Behaviors#seek(Car, Vector2)
          */
