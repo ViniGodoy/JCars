@@ -16,7 +16,10 @@ public class Setup {
      */
     public List<Car> createCars() {
         // Wanders around. Ignores the pursuer
-        var wanderer = new Car(Color.ORANGE, vec2()) {
+        var wanderer = new Car(s -> s
+          .color(Color.ORANGE)
+          .maxSpeed(200)
+        ) {
             private final Wander wander = new Wander(this);
 
             @Override
@@ -26,7 +29,10 @@ public class Setup {
         };
 
         // Pursuit the wanderer
-        var pursuer = new Car(Color.RED, vec2(200, 200)) {
+        var pursuer = new Car(s -> s
+          .randomPosition()
+          .color(Color.RED)
+        ) {
             @Override
             public Vector2 calculateSteering(World world) {
                 return pursuit(this, wanderer);
@@ -34,7 +40,11 @@ public class Setup {
         };
 
         // Approaches the mouse click.
-        var approacher = new Car(Color.BLUE, vec2(0, 0)) {
+        var approacher = new Car(s -> s
+          .randomPosition()
+          .randomOrientation()
+          .color(Color.BLUE)
+        ) {
             @Override
             public Vector2 calculateSteering(World world) {
                 if (world.getClickPos() == null) {
@@ -45,7 +55,11 @@ public class Setup {
         };
 
         // Flees from all cars closer than 300 pixels, otherwise wanders
-        var coward = new Car(Color.GREEN, vec2(200, 200), 0, 1, 350, 200) {
+        var coward = new Car(s -> s
+          .randomPosition()
+          .color(Color.GREEN)
+          .maxSpeed(200)
+        ) {
             private final Wander wander = new Wander(this);
 
             @Override
