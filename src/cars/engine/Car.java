@@ -2,6 +2,8 @@ package cars.engine;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.function.Consumer;
+
 import static cars.engine.Vector2.*;
 import static java.lang.Math.toRadians;
 
@@ -16,25 +18,15 @@ public abstract class Car implements Cloneable {
     // Store last clamped steering (pre-dt) for debug drawing
     private Vector2 lastSteering = vec2();
 
-    public Car(Color color, Vector2 position, double orientation, double mass, double maxForce, double maxSpeed) {
-        this.color = color;
-        this.position = position;
-        this.velocity = Vector2.byAngle(orientation);
-        this.mass = mass;
-        this.maxForce = maxForce;
-        this.maxSpeed = maxSpeed;
-    }
-
-    public Car(Color color, Vector2 position, double orientation, double mass) {
-        this(color, position, orientation, mass, 350, 500);
-    }
-
-    public Car(Color color, Vector2 position, double orientation) {
-        this(color, position, orientation, 1, 350, 500);
-    }
-
-    public Car(Color color, Vector2 position) {
-        this(color, position, 0, 1, 350, 500);
+    public Car(Consumer<Settings> settings) {
+        var cs = new Settings();
+        settings.accept(cs);
+        this.color = cs.color;
+        this.position = cs.position;
+        this.velocity = Vector2.byAngle(cs.orientation);
+        this.mass = cs.mass;
+        this.maxForce = cs.maxForce;
+        this.maxSpeed = cs.maxSpeed;
     }
 
     // ---- Accessors ----

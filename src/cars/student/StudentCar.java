@@ -6,15 +6,14 @@ import cars.engine.World;
 
 import java.awt.*;
 
-import static cars.engine.Vector2.*;
-import static java.lang.Math.*;
+import static cars.engine.Vector2.vec2;
 
 public class StudentCar extends Car {
     public StudentCar() {
-        super(
-            Color.BLUE, //Cor
-            new Vector2(0, 0), //Posição inicial
-            toRadians(0) //Angulo inicial
+        super(settings ->
+          settings
+            .color(Color.BLUE)
+            .randomOrientation()
         );
     }
 

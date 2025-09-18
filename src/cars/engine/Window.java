@@ -7,7 +7,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class Window extends JFrame implements Runnable {
+public final class Window extends JFrame implements Runnable {
+    public static final int INITIAL_WIDTH = 1024;
+    public static final int INITIAL_HEIGHT = 768;
+
     private final List<Car> cars;
     private Vector2 clickPos = null;
     private Vector2 mousePos = null;
@@ -15,7 +18,7 @@ public class Window extends JFrame implements Runnable {
 
     private Window() {
         super("Steering behaviors");
-        setSize(1024, 768);
+        setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
