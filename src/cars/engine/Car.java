@@ -90,10 +90,10 @@ public abstract class Car implements Cloneable {
 
     // ----- F1 car, authored at 80px, drawn with 50% scale above -----
     private static void drawF1Car80px(Graphics2D g, Color bodyColor) {
-        final double L = 80.0;
-        final double W = 36.0;
-        final double halfL = L / 2.0;
-        final double halfW = W / 2.0;
+        final var L = 80.0;
+        final var W = 36.0;
+        final var halfL = L / 2.0;
+        final var halfW = W / 2.0;
 
         final var wingColor = Color.DARK_GRAY;
         final var tireColor = Color.BLACK;
@@ -110,10 +110,11 @@ public abstract class Car implements Cloneable {
 
         // Tires (RoundRect to match FX corners)
         g.setPaint(tireColor);
-        final double tireW = 12, tireH = 7;
-        final double frontX =  halfL * 0.55;
-        final double rearX  = -halfL * 0.55;
-        final double tireY = halfW;
+        final var tireW = 12.0;
+        final var tireH = 7.0;
+        final var frontX =  halfL * 0.55;
+        final var rearX  = -halfL * 0.55;
+        final var tireY = halfW;
         g.fill(new RoundRectangle2D.Double(frontX - tireW / 2, -tireY,     tireW, tireH, 3, 3));
         g.fill(new RoundRectangle2D.Double(frontX - tireW / 2,  tireY - 7, tireW, tireH, 3, 3));
         g.fill(new RoundRectangle2D.Double(rearX  - tireW / 2, -tireY,     tireW, tireH, 3, 3));

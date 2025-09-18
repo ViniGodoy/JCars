@@ -104,7 +104,7 @@ public final class Vector2 implements Cloneable {
      * @param vs Other vectors to add.
      * @return The addition result.
      */
-    public static Vector2 add(Vector2 v1, Vector2 ... vs) {
+    public static Vector2 add(Vector2 v1, Vector2... vs) {
         var result = v1.clone();
         for (var v : vs) result.add(v);
         return result;
@@ -118,7 +118,7 @@ public final class Vector2 implements Cloneable {
      * @return The subtraction result.
      * @see #subtract(Vector2)
      */
-    public static Vector2 subtract(Vector2 v1, Vector2 ... vs) {
+    public static Vector2 subtract(Vector2 v1, Vector2... vs) {
         var result = v1.clone();
         for (var v : vs) result.subtract(v);
         return result;
@@ -241,6 +241,7 @@ public final class Vector2 implements Cloneable {
 
     /**
      * Returns true if the vector is zero or null.
+     *
      * @param v The vector to test
      * @return True if zero or null.
      */
@@ -379,7 +380,7 @@ public final class Vector2 implements Cloneable {
      */
     public double dot(Vector2 other) {
         return x * other.x +
-            y * other.y;
+                y * other.y;
     }
 
     /**
@@ -425,7 +426,7 @@ public final class Vector2 implements Cloneable {
     public boolean equals(Object other) {
         if (this == other) return true;
         if (other.getClass() != Vector2.class) return false;
-        Vector2 v = (Vector2) other;
+        var v = (Vector2) other;
         return q8(x) == q8(v.x) && q8(y) == q8(v.y);
     }
 
