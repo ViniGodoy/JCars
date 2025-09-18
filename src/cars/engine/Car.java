@@ -33,6 +33,10 @@ public abstract class Car implements Cloneable {
         this(color, position, orientation, 1, 350, 500);
     }
 
+    public Car(Color color, Vector2 position) {
+        this(color, position, 0, 1, 350, 500);
+    }
+
     // ---- Accessors ----
     public Vector2 getPosition() { return position.clone(); }
     public Vector2 getVelocity() { return velocity.clone(); }
